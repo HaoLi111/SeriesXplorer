@@ -1,0 +1,10 @@
+Package: SeriesXplorer
+Type: Package
+Title: Explorations of Behaviors of Series
+Version: 0.1.0
+Author: Hao Li
+Maintainer: Hao Li <lhrcplanes@qq.com>
+Description: Tools to analyse and visualize series, differential equations, and dynamical systems.
+License: GPL V2
+Encoding: UTF-8
+LazyData: true
