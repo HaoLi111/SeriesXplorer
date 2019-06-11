@@ -1,13 +1,4 @@
-#CobWeb Visualizer
-requireNamespace('ggplot2')
-requireNamespace('RColorBrewer')
-requireNamespace('ggthemes')
-requireNamespace('scales')
 
-require(ggplot2)
-require(RColorBrewer)
-require(ggthemes)
-require(scales)
 
 
 cobDf = function(x){
@@ -15,10 +6,9 @@ cobDf = function(x){
 
 
 
-  nIter = rep(1:l,each=2)
+  n = rep(1:l,each=2)
   xcob = rep(x,each = 2)
-  ycob = c(0,xcob[3:l],NA)
-  data.frame(nIter = nIter, xcob=xcob,ycob=c(0,xcob[3:l],NA),
+  data.frame(n = n, xcob=xcob,ycob=c(0,xcob[3:length(xcob)],NA),
                      isVertical=rep(1:0,times = l))
 }
 
@@ -30,11 +20,12 @@ updateF = function(x) 1-.1*x^2
 #Title =paste0("lambda%==%",L)
 
 
-plotCobDf = function(CobDf,xbase=NULL,nClip = 6,limType=0,
+plotCobDf = function(CobDf,xbase=NULL,nClip = NULL,limType=0,
                      Title='Cob Web Method',
                      updateF=NULL,
                      parseTitle=T,
                      updateDf=NULL,engine ="gg"){
+  CobDf = CobDf[1:(nrow(CobDf)-2),]
 
   if(is.null(xbase)) xbase= updateDf$xb
   if(!is.null(nClip)) CobDf=CobDf[(1:nClip),]
@@ -81,12 +72,16 @@ plotCobDf = function(CobDf,xbase=NULL,nClip = 6,limType=0,
     }
   }else if(engine =='gg'){
 
-    if(limType==0){
 
-    requireNamespace('ggplot2')
-    requireNamespace('RColorBrewer')
-    requireNamespace('ggthemes')
-    requireNamespace('scales')
+
+    #require(ggplot2)
+    #require(RColorBrewer)
+    #require(ggthemes)
+    #require(scales)
+
+
+
+    if(limType==0){
     #Clip #CobDf = CobDf[1:12,]
     #Cscale =brewer.pal(l-1,"Spectral")
     #xbase=seq(from=min(xbase),to=max(xbase),length.out = l-1)
@@ -97,9 +92,9 @@ plotCobDf = function(CobDf,xbase=NULL,nClip = 6,limType=0,
     lineDf = data.frame(xb=xbase,yb=xbase)
     if(is.null(updateDf)) updateDf = data.frame(xb=xbase,yf=updateF(xbase))
     g=ggplot(data=CobDf) +
-      geom_point(aes(x=xcob,y=ycob,col=nIter),size = 3.5,
+      geom_point(aes(x=xcob,y=ycob,col=n),size = 3.5,
                  alpha = .6) +
-      geom_path(aes(x=xcob,y=ycob,col = nIter),alpha =1,size=1.25) +
+      geom_path(aes(x=xcob,y=ycob,col = n),alpha =.85) +
       scale_color_distiller(direction=-1
                             ,palette = "Spectral")
 
@@ -129,19 +124,12 @@ plotCobDf = function(CobDf,xbase=NULL,nClip = 6,limType=0,
     return(g)
     #ggsave("g.tif",g,device = 'tiff')
     }else{
-
-
-      requireNamespace('ggplot2')
-      requireNamespace('RColorBrewer')
-      requireNamespace('ggthemes')
-      requireNamespace('scales')
-
       lineDf = data.frame(xb=xbase,yb=xbase)
       if(is.null(updateDf)) updateDf = data.frame(xb=xbase,yf=updateF(xbase))
       g=ggplot(data=CobDf) +
-        geom_point(aes(x=xcob,y=ycob,col=nIter),size = 3.5,
+        geom_point(aes(x=xcob,y=ycob,col=n),size = 3.5,
                    alpha = .6) +
-        geom_path(aes(x=xcob,y=ycob,col = nIter),alpha =1,size=1.25) +
+        geom_path(aes(x=xcob,y=ycob,col = n),alpha =.85) +
         scale_color_distiller(direction=-1
                               ,palette = "Spectral")
 
@@ -170,3 +158,11 @@ plotCobDf = function(CobDf,xbase=NULL,nClip = 6,limType=0,
 
 
 #plotCobDf(cobDf(x)[1:12,],nClip=NULL,xbase=(-100:100)/100,updateF=updateF,Title,engine='gg')
+
+plotCobWeb = function(x,updateDf,engine='gg',limType=1){
+  plotCobDf(cobDf(x),nClip =NULL,
+               limType=limType,
+               xbase = (-100:100)/100,
+               updateDf = updateDf,
+               engine =engine)
+}

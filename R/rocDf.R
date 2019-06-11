@@ -12,14 +12,12 @@ rocDf = function(x,
                logAbsDx=logAbsDx,
                log10AbsDx=log10AbsDx)
   }else{
-    if(is.NULL(xSymConv)){
+    if(is.null(xSymConv)){
       xSymConv=x[length(x)]
       stopifnot((!is.na(xSymConv)))
 
 
     }
-
-
 
     xErr = x-xSymConv
     absxErr =abs(xErr)
@@ -41,13 +39,35 @@ rocDf = function(x,
 }
 
 
-#Fibnacci
-x=numeric(20)
-x[1]=1
-x[2]=1
-for(i in 3:10){
-  x[i]=x[i-1]+x[i-2]
+extractConsBoundDf = function(x,Df,nCons){
+  p_cmin = is.Cons_Min(x,nCons)
+  p_cmax = is.Cons_Max(x,nCons)
+  Df_cmin=Df[as.vector(ifelse(!is.na(p_cmax) &p_cmin==1,TRUE,FALSE)),]
+  Df_cmax=Df[ifelse(!is.na(p_cmax) & p_cmax==1,TRUE,FALSE),]
+
+  list(Df_cmin = Df_cmin,
+       Df_cmax = Df_cmax)
+}
+#listCons(x,3)
+
+#find max in n consecutives
+
+plotRocDfDx = function(RocDf){
+  ggplot(RocDf,aes(x = n,y = Dx,color = n)) +
+    geom_point(size=.2,alpha = .85) +
+    geom_path(size=.1,alpha = .2) +
+    scale_color_distiller(direction=-1
+                          ,palette = "Spectral") +
+    theme_pander()
+
 }
 
 
-plotRocDf_Dx = function(Df)
+plotRocDfLogAbsDx = function(RocDf){
+  ggplot(RocDf,aes(x = n,y = logAbsDx,color = n)) +
+    geom_point(size=.2,alpha = .85) +
+    geom_path(size=.1,alpha = .2) +
+    scale_color_distiller(direction=-1
+                          ,palette = "Spectral") +
+    theme_pander()
+}

@@ -64,8 +64,6 @@ parseTitle=F,engine='gg')
 
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ ~Cob }% use one of  RShowDoc("KEYWORDS")
 \keyword{ ~Web }% __ONLY ONE__ keyword per line
 \keyword{ ~Convergence}
